@@ -5,6 +5,7 @@ const int trigPin1 = 3; //checkLeft()
 const int echoPin1 = 2; //checkLeft()
 const int trigPin2 = 5; //checkRight()
 const int echoPin2 = 4; //checkRight()
+const int closeness = 40;
 // defines variables
 long duration;
 long distanceRight;
@@ -17,24 +18,24 @@ void setup() {
   pinMode(echoPin1, INPUT); // Sets the echoPin as an Input
   pinMode(trigPin2, OUTPUT); 
   pinMode(echoPin2, INPUT);
-  Serial.begin(9600); // Starts the serial communication
+  //Serial.begin(9600); // Starts the serial communication
 }
 
 void loop() {
 
   checkRight();
   checkLeft();
-  if (distanceRight < 35 && distanceLeft >35)
+  if (distanceLeft<closeness && distanceRight<closeness)
+  {
+    turnRight();
+    turnRight();
+  }
+  else if (distanceRight<closeness)
   {
     turnLeft();
   }
-  else if (distanceLeft < 35 && distanceRight >35)
+  else if (distanceLeft<closeness)
   {
-    turnRight();
-  }
-  else if (distanceLeft <35 && distanceRight <35)
-  {
-    turnRight();
     turnRight();
   }
   else
@@ -47,7 +48,7 @@ void loop() {
 void moveForward(){
   digitalWrite(motor1, HIGH);
   digitalWrite(motor2, HIGH);
-  delay(2000);
+  delay(200);
 }
 
 void turnLeft(){
@@ -59,7 +60,7 @@ void turnLeft(){
 void turnRight(){
   digitalWrite(motor1, HIGH);
   digitalWrite(motor2, LOW);
-  delay(1000);
+  delay(800);
 }
 
 void checkLeft()
@@ -74,10 +75,7 @@ void checkLeft()
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin1, HIGH);
   // Calculating the distance
-  distanceLeft= (duration*343.21/2)/10000;
-  // Prints the distance on the Serial Monitor
-  Serial.print("DistanceLeft: ");
-  Serial.println(distanceLeft);
+  distanceLeft= duration*0.017;
 }
 
 void checkRight()
@@ -92,8 +90,5 @@ void checkRight()
   // Reads the echoPin, returns the sound wave travel time in microseconds
   duration = pulseIn(echoPin2, HIGH);
   // Calculating the distance
-  distanceRight= (duration*343.21/2)/10000;
-  // Prints the distance on the Serial Monitor
-  Serial.print("DistanceRight: ");
-  Serial.println(distanceRight);
+  distanceRight= duration*0.017;
 }
